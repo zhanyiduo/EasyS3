@@ -13,12 +13,13 @@ class easys3(object):
                     aws_secret_access_key=None,
                     s3_bucket=None,
                     s3_filepath=None,
+                    download_list=True,
 					dir = 'Data'):
 
-        assert not aws_access_key_id, 'AWS ID empty!'
-        assert not aws_secret_access_key, 'AWS secret empty!'
-        assert not s3_bucket, 'Bucket empty!'
-        assert not s3_filepath, 'Filepath empty!'
+        assert aws_access_key_id, 'AWS ID empty!'
+        assert aws_secret_access_key, 'AWS secret empty!'
+        assert s3_bucket, 'Bucket empty!'
+        assert s3_filepath, 'Filepath empty!'
 
         self.conn = boto3.resource('s3',
                                    aws_access_key_id=aws_access_key_id,
@@ -33,6 +34,14 @@ class easys3(object):
             s3_file_list = self.list_objects(Bucket =self.bucket, prefix=self.s3_prefix)
             print('List of files in the folder:')
             print(s3_file_list)
+            if download_list:
+                for file in s3_file_list:
+                    if (file) and (not file.endswith('/')):
+                        self.s3_filepath = self.s3_prefix + file
+                        self.filename = file
+                        self.download(dir)
+                    else:
+                        continue
         else:
             self.s3_filepath, self.s3_prefix, self.filename = self.clean_s3_path(s3_filepath)
             self.download(dir)

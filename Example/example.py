@@ -17,4 +17,9 @@ s3_bucket = argv.s3_bucket
 s3_filepath = argv.s3_filepath
 
 
-S3 = easys3(aws_access_key_id=AWS_ACCESS_KEY_ID,aws_secret_access_key=AWS_SECRET_ACCESS_KEY,s3_bucket=s3_bucket,s3_filepath=s3_filepath)
+S3 = easys3(aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            s3_bucket=s3_bucket,
+            s3_filepath=s3_filepath,
+            download_list=True,
+            dir='Data')
