@@ -16,7 +16,6 @@ setup(name='EasyS3',
       author_email='zhanyiduo@gmail.com',
       packages=find_packages(),
       install_requires=[
-          'boto3',
-          'pandas',
+          'boto3'
       ],
       license='Use as you wish. No guarantees whatsoever.',)
