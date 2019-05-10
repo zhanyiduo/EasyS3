@@ -69,23 +69,15 @@ class gets3(object):
         print(dir_list + obj_list)
         return dir_list + obj_list
 
-    def download(self, Bucket=None, s3_filepath=None, local_dir='Data', download_list='True'):
-        if s3_filepath.endswith('/'):
-            self.s3_prefix = s3_filepath
-            s3_file_list = self.list_objects(Bucket=Bucket, prefix=self.s3_prefix)
-            print('List of files in the folder:')
-            print(s3_file_list)
-            if download_list:
-                for file in s3_file_list:  # downloading all the files in the diretory
-                    if (file) and (not file.endswith('/')):
-                        self.s3_filepath = self.s3_prefix + file
-                        self.filename = file
-                        self.download_file(Bucket=Bucket, s3_filepath=self.s3_filepath, local_dir=local_dir)
-                    else:
-                        continue
-        else:
-            self.s3_filepath, self.s3_prefix, self.filename = self.clean_s3_path(s3_filepath)
-            self.download_file(Bucket=Bucket, s3_filepath=self.s3_filepath, local_dir=local_dir)
+    def download(self, Bucket=None, s3_filepath=None, local_dir='Data'):
+        paginator = self.client.get_paginator('list_objects')
+        for result in paginator.paginate(Bucket=Bucket, Delimiter='/', Prefix=s3_filepath):
+            if result.get('CommonPrefixes') is not None:
+                for subdir in result.get('CommonPrefixes'):
+                    self.download(Bucket=Bucket, s3_filepath=subdir.get('Prefix'), local_dir=local_dir)
+            for file in result.get('Contents', []):
+                file_dir = file.get('Key')
+                self.download_file(Bucket=Bucket, s3_filepath=file_dir, local_dir=local_dir)
 
     def download_file(self, Bucket=None, s3_filepath=None, local_dir='Data'):
         '''download object to destination

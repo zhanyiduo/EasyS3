@@ -24,7 +24,7 @@ pip install git+https://github.platforms.engineering/YZHAN6/Get_S3_data
 
     s3.list_objects(Bucket='breeding-perm-space', prefix='shared/dropbox/')#list of all objects in the folder
 
-    s3.download(Bucket='breeding-perm-space', s3_filepath='shared/dropbox/NA_80RM_15-F.consolidatedGeno.gzip')#download a specific file
+    s3.download(Bucket='breeding-perm-space', s3_filepath='aa/bb/')#download a specific file
 
     s3.download(Bucket='breeding-perm-space', s3_filepath='shared/dropbox/')#if the file path is a directory, will download all files in the directory
 ```
